@@ -23,6 +23,8 @@ export type GalleryState =
 
 //Component Props
 export interface PromptInputProps {
+  apiKey: string;
+  onApiKeySave: (key: string) => void;
   onGenerate: (prompt: string) => void;
   isLoading: boolean;
 }
