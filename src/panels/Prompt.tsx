@@ -3,6 +3,15 @@ import { type PromptInputProps } from "../types"
 import { type FormEvent } from "react"
 import { Logo } from "../components/Logo"
 
+const EXAMPLE_PROMPTS = [
+  'A dark pricing card with monthly/annual toggle',
+  'A user profile card with avatar and social links',
+  'A notification toast with progress bar',
+  'A login form with email and password',
+  'A testimonial card with star ratings',
+  'A stats dashboard card with charts',
+];
+
 export const PromptPanel = ({
   apiKey,
   onApiKeySave,
@@ -18,6 +27,11 @@ export const PromptPanel = ({
     e.preventDefault()
     if (!prompt.trim() || isLoading) return
     onGenerate(prompt.trim());
+  }
+
+  const handleChipClick = (prompt: string) => {
+    setPrompt(prompt)
+    if (!isLoading) onGenerate(prompt)
   }
 
   return (
@@ -84,9 +98,24 @@ export const PromptPanel = ({
             )}
           </button>
         </form>
-      </div>
 
-      {/* Example Chips */}
+        {/* Example Chips */}
+        <div>
+          <p className="text-xs text-gray-500 mb-2">Try an example:</p>
+          <div className="flex flex-col gap-1.5">
+            {EXAMPLE_PROMPTS.map((prompt) => (
+              <button
+                key={prompt}
+                onClick={() => handleChipClick(prompt)}
+                disabled={isLoading}
+                className="text-left text-xs px-3 py-2 bg-teal-900/25 text-teal-600 rounded-lg border border-teal-600 hover:border-teal-700 hover:text-teal-200 disabled:opacity-50 transition-colors"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* Footer */}
     </aside >
