@@ -118,6 +118,9 @@ export const PromptPanel = ({
       </div>
 
       {/* Footer */}
+      <div className="px-4 py-3">
+        <p className="text-xs text-teal-900">Key stored locally in browser only</p>
+      </div>
     </aside >
   )
 }
