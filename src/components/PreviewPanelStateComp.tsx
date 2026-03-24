@@ -36,6 +36,3 @@ export const ErrorState = ({ message }: { message: string }) => {
   )
 }
 
-export const TabButton = () => {
-
-}
