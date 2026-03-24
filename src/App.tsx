@@ -2,11 +2,9 @@ import { useState } from "react";
 import { GalleryPanel } from "./panels/Gallery";
 import { PreviewPanel } from "./panels/Preview";
 import { PromptPanel } from "./panels/Prompt";
-import { GenerationState } from "./types";
+import { type GenerationState, type GalleryState } from "./types";
 import handleGenerate from "./utils/handleGenerate";
 import handleSave from "./utils/handleSave";
-import { type GalleryState } from "./types";
-import fetchGallery from "./utils/fetchGallery";
 
 function App() {
   const [apiKey, setApiKey] = useState(() => {
@@ -16,22 +14,34 @@ function App() {
   const [isSaving, setSaving] = useState(false)
   const [galleryState, setGalleryState] = useState<GalleryState>({ status: "idle" })
 
+  const onGenerate = (prompt: string) => {
+    handleGenerate(apiKey, setGenerationState, prompt)
+  }
+
+  const onSave = () => {
+
+  }
+
+  const onRefresh = () => {
+
+  }
+
   return (
     <div className="flex h-screen bg-gray-950 text-white overflow-hidden">
       <PromptPanel
         apiKey={apiKey}
         onApiKeySave={setApiKey}
         isLoading={generationState.status === 'loading'}
-        onGenerate={handleGenerate}
+        onGenerate={onGenerate}
       />
       <PreviewPanel
         state={generationState}
-        onSave={handleSave}
+        onSave={onSave}
         isSaving={isSaving}
       />
       <GalleryPanel
         state={galleryState}
-        onRefresh={fetchGallery}
+        onRefresh={onRefresh}
       />
     </div>
   )
