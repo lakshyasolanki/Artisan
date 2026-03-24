@@ -10,7 +10,6 @@ export const TabButton = ({
   children: React.ReactNode;
 }) => {
   return (
-
     <button
       onClick={onClick}
       className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
