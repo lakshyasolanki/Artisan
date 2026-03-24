@@ -1,32 +1,33 @@
+import { useState } from "react"
+import { ErrorState, IdlePlaceholder, LoadingState } from "../components/PreviewPanelComponents"
 import { type PreviewPanelProps } from "../types"
+import { preview } from "vite"
+import { WebPreview } from "../components/WebPreview"
+import { CodeBlock } from "../components/CodeBlock"
 
 export const PreviewPanel = ({
   state,
   onSave,
   isSaving,
 }: PreviewPanelProps) => {
+  const [activeTab, setActiveTab] = useState<'preview' | 'code'>('preview')
+
   return (
     <div className="flex-1 flex flex-col min-h-0">
-      {state.status === "idle" &&
-        <p className="text-gray-500">Describe a component to generate code</p>
-      }
-      {state.status === "loading" &&
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-400">Generating...</p>
-        </div>
-      }
-      {state.status === "error" &&
-        <p className="text-red-400">{state.message}</p>
-      }
-      {state.status === "success" &&
-        <div className="max-w-2xl w-full">
-          <p className="text-sm text-gray-400 mb-2">Generated code (preview coming in Class 4):</p>
-          <pre className="bg-gray-900 p-4 rounded-lg text-sm text-green-400 overflow-auto max-h-96">
-            {state.code}
-          </pre>
-        </div>
-      }
+      {/* Toolbar */}
+      <div>
+      </div>
+
+      <div className="flex-1 flex items-center justify-center bg-gray-950/50 p-6 overflow-auto">
+        {state.status === 'idle' && <IdlePlaceholder />}
+        {state.status === 'loading' && <LoadingState />}
+        {state.status === 'error' && <ErrorState message={state.message} />}
+        {state.status === 'success' && (
+          activeTab === 'preview' ?
+            <WebPreview code="" /> :
+            <CodeBlock code="" />
+        )}
+      </div>
     </div>
   )
 }
