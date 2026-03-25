@@ -14,8 +14,8 @@ function App() {
   const [isSaving, setSaving] = useState(false)
   const [galleryState, setGalleryState] = useState<GalleryState>({ status: "idle" })
 
-  const onGenerate = (prompt: string) => {
-    handleGenerate(apiKey, setGenerationState, prompt)
+  const onGenerate = (prompt: string, theme: string) => {
+    handleGenerate(apiKey, setGenerationState, prompt, theme)
   }
 
   const onSave = () => {

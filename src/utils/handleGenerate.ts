@@ -22,10 +22,15 @@ const cleanGeneratedCode = (raw: string): string => {
   return code.trim();
 };
 
+const sysPromptWithTheme = (theme: string) => {
+  return `Return only raw JSX for a single React component. Make sure the component is in ${theme} theme. No imports, no exports, no function wrapper, no explanations, no markdown code fences. Use only Tailwind CSS classes for styling. The JSX should be a single root element. Use realistic placeholder content.`
+}
+
 async function handleGenerate(
   apiKey: string,
   setGenerationState: ({ }: GenerationState) => void,
-  prompt: string
+  prompt: string,
+  theme: string
 ) {
   if (!apiKey) return;
   setGenerationState({ status: "loading" });
@@ -34,8 +39,7 @@ async function handleGenerate(
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
-    const systemPrompt = 'Return only raw JSX for a single React component. No imports, no exports, no function wrapper, no explanations, no markdown code fences. Use only Tailwind CSS classes for styling. The JSX should be a single root element. Use realistic placeholder content.';
-
+    const systemPrompt = sysPromptWithTheme(theme)
     const result = await model.generateContent({
       contents: [
         {

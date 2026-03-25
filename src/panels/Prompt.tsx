@@ -13,17 +13,18 @@ export const PromptPanel = ({
   const [hide, setHide] = useState(false)
   const [key, setKey] = useState(apiKey)
   const [prompt, setPrompt] = useState('')
+  const [theme, setTheme] = useState('dark')
 
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     if (!prompt.trim() || isLoading) return
-    onGenerate(prompt.trim());
+    onGenerate(prompt.trim(), theme);
   }
 
   const handleChipClick = (prompt: string) => {
     setPrompt(prompt)
-    if (!isLoading) onGenerate(prompt)
+    if (!isLoading) onGenerate(prompt, theme)
   }
 
   return (
@@ -94,11 +95,22 @@ export const PromptPanel = ({
         <div className="p-1 flex items-center justify-between">
           <select
             name="theme"
-            defaultValue='light'
+            defaultValue='dark'
             className="text-xs text-gray-400"
+            onChange={(e) => setTheme(e.target.value)}
           >
-            <option value='light'>Light</option>
-            <option value='dark'>Dark</option>
+            <optgroup label="Modes" className="bg-gray-900">                                                                                                                                    │
+              <option value='dark'>Dark Mode</option>                                                                                                                                           │
+              <option value='light'>Light Mode</option>                                                                                                                                         │
+            </optgroup>                                                                                                                                                                         │
+            <optgroup label="Safe Styles" className="bg-gray-900">                                                                                                                              │
+              <option value='modern'>Modern Clean</option>                                                                                                                                      │
+              <option value='corporate'>Corporate Blue</option>                                                                                                                                 │
+              <option value='minimalist'>Minimalist</option>                                                                                                                                    │
+              <option value='high-contrast'>High Contrast</option>                                                                                                                              │
+              <option value='soft-pastel'>Soft Pastel</option>                                                                                                                                  │
+              <option value='monochrome'>Monochrome</option>                                                                                                                                    │
+            </optgroup>                                                                                                                                                                         │
           </select>
           <button
             type="submit"
