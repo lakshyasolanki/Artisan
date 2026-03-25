@@ -44,7 +44,7 @@ export const PreviewPanel = ({
               <button
                 onClick={onSave}
                 disabled={isSaving}
-                className="text-xs px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+                className="text-xs px-3 py-1.5 font-medium text-teal-400 bg-teal-600/75 rounded-lg hover:bg-teal-800  active:scale-98  disabled:opacity-50 transition-colors"
               >
                 {isSaving ? 'Saving...' : 'Save'}
               </button>

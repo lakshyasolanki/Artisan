@@ -10,8 +10,8 @@ const buildSrcdoc = (jsxCode: string): string => `
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"><\/script>
   <script src="https://cdn.tailwindcss.com"><\/script>
   <style>
-    body { margin: 0; padding: 16px; font-family: system-ui, -apple-system, sans-serif; background: white; }
-    .error-display { color: #ef4444; padding: 16px; font-family: monospace; font-size: 14px; white-space: pre-wrap; }
+    body { margin: 0; padding: 16px; font-family: system-ui, -apple-system, sans-serif; background: black; }
+    .error-display { color: #ef4444; padding: 16px; font-family: monospace; font-size: 12px; white-space: pre-wrap; }
   </style>
 </head>
 <body>
