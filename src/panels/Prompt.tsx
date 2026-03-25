@@ -83,7 +83,7 @@ export const PromptPanel = ({
       {/* Prompt Input */}
       <form
         onSubmit={handleSubmit}
-        className="m-1 border border-gray-700 bg-black/80 rounded-lg space-y-3"
+        className="m-1 border border-gray-700 bg-black/90 rounded-lg space-y-3"
       >
         <textarea
           rows={5}
@@ -96,7 +96,7 @@ export const PromptPanel = ({
           <select
             name="theme"
             defaultValue='dark'
-            className="text-xs text-gray-400"
+            className="text-xs text-gray-400 appearance-none outline-none"
             onChange={(e) => setTheme(e.target.value)}
           >
             <optgroup label="Modes" className="bg-gray-900">                                                                                                                                    │
