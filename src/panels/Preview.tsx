@@ -61,7 +61,7 @@ export const PreviewPanel = ({
         {state.status === 'success' && (
           activeTab === 'preview' ?
             <WebPreview code={state.code} /> :
-            <CodeBlock code="" />
+            <CodeBlock code={state.code} />
         )}
       </div>
     </div>
