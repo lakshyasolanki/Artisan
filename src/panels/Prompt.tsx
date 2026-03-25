@@ -2,15 +2,7 @@ import { useState } from "react"
 import { type PromptInputProps } from "../types"
 import { type FormEvent } from "react"
 import { Logo } from "../components/Logo"
-
-const EXAMPLE_PROMPTS = [
-  'A dark pricing card with monthly/annual toggle',
-  'A user profile card with avatar and social links',
-  'A notification toast with progress bar',
-  'A login form with email and password',
-  'A testimonial card with star ratings',
-  'A stats dashboard card with charts',
-];
+import { getRandomPrompts } from "../utils/egPromptChips"
 
 export const PromptPanel = ({
   apiKey,
@@ -103,7 +95,7 @@ export const PromptPanel = ({
         <div>
           <p className="text-xs text-gray-500 mb-2">Try an example:</p>
           <div className="flex flex-col gap-1.5">
-            {EXAMPLE_PROMPTS.map((prompt) => (
+            {getRandomPrompts(7).map((prompt) => (
               <button
                 key={prompt}
                 onClick={() => handleChipClick(prompt)}
