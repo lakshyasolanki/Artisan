@@ -1,5 +1,5 @@
 // builds a sandboxed html document that renders jsx with react 18, babel, and tailwind via cdn
-const buildSrcdoc = (jsxCode: string): string => `
+export const buildSrcdoc = (jsxCode: string): string => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,6 +40,7 @@ export const WebPreview = ({ code }: { code: string }) => {
     <div className="w-full h-full rounded-xl overflow-hidden border border-gray-800 bg-white">
       <iframe
         srcDoc={srcdoc}
+        scrolling="no"
         sandbox="allow-scripts"
         title="Component Preview"
         className="w-full h-full border-0"

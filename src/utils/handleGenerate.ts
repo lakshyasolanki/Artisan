@@ -64,7 +64,6 @@ async function handleGenerate(
     }
 
     setGenerationState({ status: 'success', code, prompt });
-    console.log(code)
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Generation Failed'
     console.log(message)

@@ -18,6 +18,12 @@ const db = app ? getFirestore(app) : null;
 
 const COLLECTION_NAME = 'components';
 
+export const isFirebaseConfigured = (): boolean => isConfigured;
+if (!isConfigured) {
+  console.warn('Firebase connection isnt established check env variables')
+  console.error('Current env variables', firebaseConfig)
+}
+
 //fn which we'll use to save component in firestore
 export const saveComponent = async (
   prompt: string,
