@@ -1,5 +1,7 @@
 # 🎨 Artisan
 
+![Artisan](./artisan.png)
+
 Artisan is an AI-powered component generator that transforms your text prompts into beautiful, functional React components in seconds. Built with React, TypeScript, and powered by Google's Gemini AI.
 
 ---
