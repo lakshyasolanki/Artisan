@@ -1,14 +1,15 @@
 # 🎨 Artisan
 
-![Artisan](./artisan.png)
+![Artisan](./public/artisan.png)
 
 Artisan is an AI-powered component generator that transforms your text prompts into beautiful, functional React components in seconds. Built with React, TypeScript, and powered by Google's Gemini AI.
 
 ---
 
 ### 💡 What I Learnt From This Project
+>
 > *[Note: I will manually add more specific technical learnings here later.]*
-> 
+>
 > One of the biggest takeaways from building Artisan was understanding how to bridge the gap between AI-generated raw code and a safe, interactive preview environment. Managing environment variables across different directory levels (root vs. src) and configuring Firebase for real-time storage were key practical challenges I overcame.
 
 ---
@@ -28,15 +29,15 @@ Artisan is an AI-powered component generator that transforms your text prompts i
 
 The app follows a clean, linear flow from an idea to a saved asset:
 
-1.  **Input Phase**: The user provides a prompt and an optional theme in the **Prompt Panel**.
-2.  **AI Engine**: The prompt is sent to the **Gemini API**. It processes the request and returns a string containing pure JSX code.
-3.  **Rendering Phase**: 
-    *   The raw code is "cleaned" (removing markdown blocks).
-    *   It is injected into a sandboxed `<iframe>` using a custom-built `srcDoc`.
-    *   Inside the iframe, **Babel** and **Tailwind CSS** (via CDN) transform the JSX into a visual UI on the fly.
-4.  **Persistence**:
-    *   When the user clicks **Save**, the code, prompt, and a generated title are sent to **Firebase Firestore**.
-    *   The **Gallery Panel** listens for updates and displays the saved components using a smart scaling technique to ensure every preview looks like a desktop component.
+1. **Input Phase**: The user provides a prompt and an optional theme in the **Prompt Panel**.
+2. **AI Engine**: The prompt is sent to the **Gemini API**. It processes the request and returns a string containing pure JSX code.
+3. **Rendering Phase**:
+    - The raw code is "cleaned" (removing markdown blocks).
+    - It is injected into a sandboxed `<iframe>` using a custom-built `srcDoc`.
+    - Inside the iframe, **Babel** and **Tailwind CSS** (via CDN) transform the JSX into a visual UI on the fly.
+4. **Persistence**:
+    - When the user clicks **Save**, the code, prompt, and a generated title are sent to **Firebase Firestore**.
+    - The **Gallery Panel** listens for updates and displays the saved components using a smart scaling technique to ensure every preview looks like a desktop component.
 
 ---
 
