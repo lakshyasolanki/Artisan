@@ -1,73 +1,63 @@
-# React + TypeScript + Vite
+# 🎨 Artisan
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Artisan is an AI-powered component generator that transforms your text prompts into beautiful, functional React components in seconds. Built with React, TypeScript, and powered by Google's Gemini AI.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### 💡 What I Learnt From This Project
+> *[Note: I will manually add more specific technical learnings here later.]*
+> 
+> One of the biggest takeaways from building Artisan was understanding how to bridge the gap between AI-generated raw code and a safe, interactive preview environment. Managing environment variables across different directory levels (root vs. src) and configuring Firebase for real-time storage were key practical challenges I overcame.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🚀 Features
 
-## Expanding the ESLint configuration
+- **AI Generation**: Type any component idea (e.g., "A modern pricing table") and watch Gemini generate the code instantly.
+- **Live Preview**: See your component rendered in real-time inside a sandboxed environment.
+- **Code Access**: Switch to the Code tab to see exactly what the AI wrote, with full syntax highlighting.
+- **One-Click Copy**: Quickly copy the generated JSX to use in your own projects.
+- **Personal Gallery**: Save your favorite creations to a permanent gallery backed by Firebase.
+- **Smart Thumbnails**: A visual gallery with crisp, scaled-down previews of every saved component.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 🏗️ System Design & Dataflow
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The app follows a clean, linear flow from an idea to a saved asset:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1.  **Input Phase**: The user provides a prompt and an optional theme in the **Prompt Panel**.
+2.  **AI Engine**: The prompt is sent to the **Gemini API**. It processes the request and returns a string containing pure JSX code.
+3.  **Rendering Phase**: 
+    *   The raw code is "cleaned" (removing markdown blocks).
+    *   It is injected into a sandboxed `<iframe>` using a custom-built `srcDoc`.
+    *   Inside the iframe, **Babel** and **Tailwind CSS** (via CDN) transform the JSX into a visual UI on the fly.
+4.  **Persistence**:
+    *   When the user clicks **Save**, the code, prompt, and a generated title are sent to **Firebase Firestore**.
+    *   The **Gallery Panel** listens for updates and displays the saved components using a smart scaling technique to ensure every preview looks like a desktop component.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 🛠️ Tech Stack
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Frontend**: React 19, TypeScript, Tailwind CSS
+- **AI**: Google Gemini Pro API (`@google/generative-ai`)
+- **Backend**: Firebase Firestore
+- **Bundler**: Vite
+
+---
+
+### ⚙️ Setup
+
+To run Artisan locally, you need a `.env` file in the **root** directory with the following keys:
+
+```env
+VITE_GEMINI_API_KEY=your_gemini_key
+
+VITE_FIREBASE_API_KEY=your_key
+VITE_FIREBASE_AUTH_DOMAIN=your_domain
+VITE_FIREBASE_PROJECT_ID=your_id
+VITE_FIREBASE_STORAGE_BUCKET=your_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_id
+VITE_FIREBASE_APP_ID=your_app_id
 ```
