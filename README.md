@@ -27,6 +27,15 @@ Artisan is an AI-powered component generator that transforms your text prompts i
 
 ---
 
+### 🔜 Soon
+
+- [ ] **Interactive History:** A cool feature we could add later is making the history clickable.
+  - If a user doesn't like the latest change, they could click a previous "Model" message to "Roll back" to that version of the code.
+- [ ] **Search Component:** User can search saved component by its saved title
+- [ ] **Refine Saved Component:** User can start the chat of saved component and refine it
+
+---
+
 ### 🏗️ System Design & Dataflow
 
 The app follows a clean, linear flow from an idea to a saved asset:
