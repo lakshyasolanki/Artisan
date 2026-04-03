@@ -11,7 +11,7 @@ export interface ComponentDocument {
 export type GenerationState =
   { status: 'idle' }
   | { status: 'loading' }
-  | { status: 'success'; code: string; prompt: string }
+  | { status: 'success'; code: string; prompt: string; title: string }
   | { status: 'error'; message: string };
 
 //gallery fetch state

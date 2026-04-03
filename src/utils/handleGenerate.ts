@@ -1,34 +1,29 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { type GenerationState } from "../types";
+import { ComponentResponseSchema } from "../validation.ts";
 
-const extractTitle = (prompt: string): string => {
-  const words = prompt.split(/\s+/).slice(0, 6).join(' ');
-  return words.length > 50 ? words.slice(0, 50) + '...' : words;
-};
-// strip markdown fences and import/export lines from ai response
-const cleanGeneratedCode = (raw: string): string => {
-  let code = raw.trim();
-  // remove markdown code fences like ```jsx ... ```
-  code = code.replace(/^```(?:jsx|tsx|javascript|typescript)?\s*\n?/i, '');
-  code = code.replace(/\n?```\s*$/i, '');
-  // remove import/export lines
-  code = code.replace(/^import\s+.*;\s*\n?/gm, '');
-  code = code.replace(/^export\s+(default\s+)?/gm, '');
-  // remove function/const component wrappers if AI wraps in a component definition
-  const fnMatch = code.match(/(?:function|const)\s+\w+\s*(?:=\s*)?(?:\([^)]*\)\s*(?:=>)?\s*)?[({]\s*\n?\s*return\s*\(\s*\n?([\s\S]*?)\n?\s*\)\s*;?\s*\n?\s*[})]\s*;?\s*$/);
-  if (fnMatch?.[1]) {
-    code = fnMatch[1].trim();
-  }
-  return code.trim();
+const componentSchema = {
+  type: SchemaType.OBJECT as const,
+  properties: {
+    title: {
+      type: SchemaType.STRING as const,
+      description: 'A short descriptive title for the component (3-6 words)',
+    },
+    code: {
+      type: SchemaType.STRING as const,
+      description: 'Raw JSX code for the component. Single root element. Use Tailwind CSS classes. No imports, exports, or function wrappers.',
+    },
+  },
+  required: ['title', 'code'],
 };
 
 const sysPromptWithTheme = (theme: string) => {
-  return `Return only raw JSX for a single React component. Make sure the component is in ${theme} theme. No imports, no exports, no function wrapper, no explanations, no markdown code fences. Use only Tailwind CSS classes for styling. The JSX should be a single root element. Use realistic placeholder content.`
+  return `You are a React component generator. When given a description, generate a single React component using JSX and Tailwind CSS classes. The code should be raw JSX (a single root element), with no imports, no exports, and no function wrapper. Use realistic placeholder content. Make sure the component is in ${theme} theme.`
 }
 
 async function handleGenerate(
   apiKey: string,
-  setGenerationState: ({ }: GenerationState) => void,
+  setGenerationState: (state: GenerationState) => void,
   prompt: string,
   theme: string
 ) {
@@ -37,34 +32,47 @@ async function handleGenerate(
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      systemInstruction: sysPromptWithTheme(theme)
+    });
 
-    const systemPrompt = sysPromptWithTheme(theme)
     const result = await model.generateContent({
       contents: [
         {
           role: 'user',
           parts: [{
-            text: `${systemPrompt}\n\n User request: ${prompt}`
+            text: `User request: ${prompt}`
           }]
         },
       ],
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 5000,
+        responseMimeType: "application/json",
+        responseSchema: componentSchema,
       },
     });
 
     const raw = result.response.text();
-    const code = cleanGeneratedCode(raw)
 
-    if (!code) {
-      setGenerationState({ status: "error", message: "No code was generated. Try a different prompt." })
+    const parsed = ComponentResponseSchema.safeParse(JSON.parse(raw))
+    if (!parsed.success) {
+      setGenerationState({ status: 'error', message: `AI returned invalid data format ${parsed.error.issues}` })
       return
     }
 
-    setGenerationState({ status: 'success', code, prompt });
+    setGenerationState({
+      status: 'success',
+      code: parsed.data.code,
+      prompt,
+      title: parsed.data.title
+    });
   } catch (e) {
+    if (e instanceof SyntaxError) {
+      setGenerationState({ status: 'error', message: 'AI returned invalid response. Try again.' });
+      return;
+    }
     const message = e instanceof Error ? e.message : 'Generation Failed'
     console.log(message)
     setGenerationState({ status: 'error', message })

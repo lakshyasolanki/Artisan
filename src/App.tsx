@@ -7,12 +7,7 @@ import handleGenerate from "./utils/handleGenerate";
 import { isFirebaseConfigured, listComponent, saveComponent } from "./libs/firebase";
 
 
-const extractTitle = (prompt: string): string => {
-  const words = prompt.split(/\s+/).slice(0, 6).join(' ');
-  return words.length > 50 ? words.slice(0, 50) + '...' : words;
-};
-
-function App() {
+const App = () => {
   const [apiKey, setApiKey] = useState(() => {
     return localStorage.getItem("gemini_api_key") ?? ''
   })
@@ -32,8 +27,7 @@ function App() {
     if (!isFirebaseConfigured()) return
     setSaving(true)
     try {
-      const title = extractTitle(generationState.prompt)
-      await saveComponent(generationState.prompt, generationState.code, title);
+      await saveComponent(generationState.prompt, generationState.code, generationState.title);
       await fetchGallery();
     } catch (e) {
       console.error('Failed to save component', e)

@@ -8,9 +8,11 @@ Artisan is an AI-powered component generator that transforms your text prompts i
 
 ### 💡 What I Learnt From This Project
 >
-> *[Note: I will manually add more specific technical learnings here later.]*
+> Key learning while building Artisan at this point for me are:
 >
-> One of the biggest takeaways from building Artisan was understanding how to bridge the gap between AI-generated raw code and a safe, interactive preview environment. Managing environment variables across different directory levels (root vs. src) and configuring Firebase for real-time storage were key practical challenges I overcame.
+>- Learnt managing client side code.
+>- A look at the domain of applied-ai/generative-ai.
+>- Use firebase first time.
 
 ---
 
