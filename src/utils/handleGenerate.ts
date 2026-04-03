@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
-import { type GenerationState } from "../types";
+import { type GenerationState, type Message } from "../types";
 import { ComponentResponseSchema } from "../validation.ts";
 
 const componentSchema = {
@@ -18,14 +18,16 @@ const componentSchema = {
 };
 
 const sysPromptWithTheme = (theme: string) => {
-  return `You are a React component generator. When given a description, generate a single React component using JSX and Tailwind CSS classes. The code should be raw JSX (a single root element), with no imports, no exports, and no function wrapper. Use realistic placeholder content. Make sure the component is in ${theme} theme.`
+  return `You are a React component generator. When given a description, generate a single React component using JSX and Tailwind CSS classes. Always return the FULL updated JSX code for the component, even if only a small change was
+  requested. The code should be raw JSX (a single root element), with no imports, no exports, and no function wrapper. Use realistic placeholder content. Make sure the component is in ${theme} theme.`
 }
 
 async function handleGenerate(
   apiKey: string,
   setGenerationState: (state: GenerationState) => void,
   prompt: string,
-  theme: string
+  theme: string,
+  history: Message[] = []
 ) {
   if (!apiKey) return;
   setGenerationState({ status: "loading" });
@@ -37,24 +39,21 @@ async function handleGenerate(
       systemInstruction: sysPromptWithTheme(theme)
     });
 
-    const result = await model.generateContent({
-      contents: [
-        {
-          role: 'user',
-          parts: [{
-            text: `User request: ${prompt}`
-          }]
-        },
-      ],
+    //Initialize the chat with the history passed in,
+    const chat = model.startChat({
+      history: history, //this is the 'memory'
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 5000,
         responseMimeType: "application/json",
-        responseSchema: componentSchema,
-      },
-    });
+        responseSchema: componentSchema
+      }
+    })
 
-    const raw = result.response.text();
+    //Send new prompt through a chat session
+    const result = await chat.sendMessage(`User request: ${prompt}`)
+    const response = result.response;
+    const raw = response.text();
 
     const parsed = ComponentResponseSchema.safeParse(JSON.parse(raw))
     if (!parsed.success) {
@@ -62,11 +61,18 @@ async function handleGenerate(
       return
     }
 
+    //Update the history list
+    const updatedHistory: Message[] = [
+      ...history,
+      { role: 'user', parts: [{ text: prompt }] },
+      { role: 'model', parts: [{ text: raw }] }
+    ]
     setGenerationState({
       status: 'success',
       code: parsed.data.code,
       prompt,
-      title: parsed.data.title
+      title: parsed.data.title,
+      history: updatedHistory
     });
   } catch (e) {
     if (e instanceof SyntaxError) {

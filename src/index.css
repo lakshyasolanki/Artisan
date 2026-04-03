@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 
+html {
+  /* overscroll-behavior: none; */
+}
+
+body {
+  background-color: #030712;
+}
+
 @theme {
   --font-sans: 'Inter', system-ui, sans-serif;
 }

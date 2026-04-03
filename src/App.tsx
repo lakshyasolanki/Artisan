@@ -19,7 +19,9 @@ const App = () => {
   }, [])
 
   const onGenerate = (prompt: string, theme: string) => {
-    handleGenerate(apiKey, setGenerationState, prompt, theme)
+    const history = generationState.status === 'success' ? generationState.history : []
+
+    handleGenerate(apiKey, setGenerationState, prompt, theme, history)
   }
 
   const handleSave = async () => {

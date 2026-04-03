@@ -7,11 +7,16 @@ export interface ComponentDocument {
   createdAt: number
 }
 
+export interface Message {
+  role: 'user' | 'model'
+  parts: { text: string }[]
+}
+
 //ai generation state
 export type GenerationState =
   { status: 'idle' }
   | { status: 'loading' }
-  | { status: 'success'; code: string; prompt: string; title: string }
+  | { status: 'success'; code: string; prompt: string; title: string, history: Message[] }
   | { status: 'error'; message: string };
 
 //gallery fetch state
